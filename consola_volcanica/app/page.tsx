@@ -1,69 +1,100 @@
-import Image from "next/image";
+'use client';
+import { useState, useEffect } from 'react';
 
-export default function Home() {
+export default function ConsolaBasicaEscolar() {
+  // Variables de estado básicas estilo principiante
+  const [estadoAlerta, setEstadoAlerta] = useState('NORMAL');
+  const [valorStaLta, setValorStaLta] = useState(0);
+  const [tramaId, setTramaId] = useState(1);
+  const [historialMuestras, setHistorialMuestras] = useState<number[]>([]);
+
+  
+  useEffect(() => {
+    const intervalo = setInterval(() => {
+      
+      setTramaId((prev) => prev + 1);
+
+      
+      let muestraAleatoria = (Math.random() - 0.5) * 4;
+
+      
+      let staSimulado = Math.abs(muestraAleatoria) * 2;
+      let ltaSimulado = 1.0; 
+      let relacion = staSimulado / ltaSimulado;
+
+      setValorStaLta(Number(relacion.toFixed(2)));
+
+      
+      if (relacion >= 4.0) {
+        setEstadoAlerta('¡DISPARO / ALERTA SÍSMICA ACTIVADA!');
+      } else if (relacion <= 1.5) {
+        setEstadoAlerta('NORMAL');
+      }
+
+      
+      setHistorialMuestras((prev) => {
+        const nuevoHistorial = [...prev, Number(muestraAleatoria.toFixed(2))];
+        if (nuevoHistorial.length > 15) {
+          nuevoHistorial.shift(); 
+        }
+        return nuevoHistorial;
+      });
+
+    }, 1000); 
+
+    return () => clearInterval(intervalo);
+  }, []);
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+    <div style={{ padding: '20px', fontFamily: 'Courier New, monospace', backgroundColor: '#f0f0f0', color: '#000' }}>
+      <h2>Consola de Vigilancia Sismo-Volcánica (Versión Básica Escolar)</h2>
+      <p><i>Basado en Caso de Estudio 1 - Ingeniería de Software</i></p>
+
+      <hr />
+
+      
+      <div style={{ border: '1px solid black', padding: '10px', background: '#fff', width: '350px' }}>
+        <p><strong>Trama actual ID:</strong> {tramaId}</p>
+        <p><strong>Estado del Sistema:</strong> 
+          <span style={{ color: estadoAlerta.includes('ALERTA') ? 'red' : 'green', fontWeight: 'bold' }}>
+             {estadoAlerta}
+          </span>
+        </p>
+        <p><strong>Relación STA/LTA (RF-2):</strong> {valorStaLta}</p>
+      </div>
+
+      <br />
+
+      
+      <h3>Sismograma en Vivo (Canal N-S Estación 1)</h3>
+      <div style={{ 
+        width: '500px', 
+        height: '120px', 
+        border: '2px solid #333', 
+        background: '#000', 
+        color: '#00ff00', 
+        padding: '10px',
+        overflow: 'hidden',
+        fontFamily: 'monospace'
+      }}>
+        <p style={{ margin: 0, fontSize: '12px' }}>&gt;&gt; Flujo de muestras recientes:</p>
+        <p style={{ margin: '10px 0', fontSize: '14px', wordBreak: 'break-all' }}>
+          {historialMuestras.map((m, index) => (
+            <span key={index} style={{ marginRight: '5px' }}>
+              [{m}]
+            </span>
+          ))}
+        </p>
+      </div>
+
+      <br />
+
+      
+      <div style={{ marginTop: '10px' }}>
+        <button onClick={() => alert('Exportando datos a CSV (Simulado)...')} style={{ padding: '5px 10px' }}>
+          Exportar CSV (RF-7)
+        </button>
+      </div>
     </div>
   );
 }
